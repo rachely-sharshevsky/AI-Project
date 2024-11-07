@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        input[type="file"],
+        textarea {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="pdf-form" enctype="multipart/form-data">
+        <div>
+            <input type="file" name="pdfFile" accept=".pdf" required>
+            <button type="submit">Upload PDF</button>
+        </div>
+
+        <div>
+            <textarea name="jobDescription" placeholder="Paste job description here (max 4000 characters)"
+                maxlength="4000"></textarea>
+        </div>
+
+    </form>
+
+    <script>
+        const form = document.getElementById('pdf-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                let responsAsObj = await response.json();
+
+                if (response.ok) {   //message
+                    alert(responsAsObj.message);
+                    form.reset();
+                } else {
+                    alert('Error uploading PDF.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the PDF.');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
